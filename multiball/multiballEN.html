@@ -289,7 +289,7 @@ output {
 #stats * {
   font-size: 2vmin;
 }
-div.language:nth-of-type(1) {
+#language {
   float: right;
   padding: 1vmin;
   border: 1px solid black;
@@ -306,11 +306,11 @@ div.language:nth-of-type(1) {
    <div id="save_label"><a id="save_file" href="">save</a></div>
   </div>
   <div id='toolbox'>
-   <label id="balls_label">balls <output id="balls_value"></output></label>
-   <label id="credits_label">credits <output id="credits_value"></output></label>
+   <label id="balls_label"><span>balls</span> <output id="balls_value"></output></label>
+   <label id="credits_label"><span>credits</span> <output id="credits_value"></output></label>
    <div id='home_button' title="Call running balls home">Home</div>
    <div id='speed_box' title="Adjust animation speed">
-    <label for="speed_input">speed <output id="speed_value"></output></label>
+    <label for="speed_input"><span>speed</span> <output id="speed_value"></output></label>
     <input type="range" id='speed_input' name="speed_input" min="10" max="100" value="40">
    </div>
   </div>
@@ -327,11 +327,11 @@ div.language:nth-of-type(1) {
 
 <!-- Statistics -->
 <div id="stats">
- <div id="efficiency"><label>efficiency : <output id="efficiency_value"></output></Label></div>
+ <div id="efficiency"><label><span>efficiency</span> : <output id="efficiency_value"></output></Label></div>
 </div>
-<div class="language">
-  <div class="language">
-      Langue : 
+<div>
+  <div id="language">
+      <span>Lang</span> : 
       <select>
           <option onclick="set_language()">Français</option>
           <option selected>English</option>
@@ -1705,5 +1705,35 @@ won.addEventListener('click',start_next_level);
 attachClickListener(save_file,save);
 attachClickListener(load_file,e=>e.target.disabled && e.preventDefault());
 load_file.addEventListener('change',load);
-function set_language() { head.innerHTML += '\n<meta http-equiv="refresh" content="0;URL=multiballFR.html">' }
+
+var langs = [{
+  lang:   "Français",
+  words:  [
+            "Niveau 1",
+            "Ouvrir",
+            "Sauvegarder",
+            "Balles",
+            "Crédits",
+            "Base",
+            "Vitesse",
+            "Perdu !",
+            "Félicitations<br>Tu as complété un niveau !",
+            "Efficacité",
+            "Langue"
+          ]
+}];
+
+function change_language() {
+  level_label.textContent = langs[0].words[0];
+  document.querySelector("#load_label span").textContent = langs[0].words[1];
+  save_file.textContent = langs[0].words[2];
+  document.querySelector("#balls_label span").textContent = langs[0].words[3];
+  document.querySelector("#credits_label span").textContent = langs[0].words[4];
+  home_button.textContent = langs[0].words[5];
+  document.querySelector("label[for='speed_input'] span").textContent = langs[0].words[6];
+  lost.textContent = langs[0].words[7];
+  won.textContent = langs[0].words[8];
+  document.querySelector("#efficiency label span").textContent = langs[0].words[9];
+  document.querySelector("#language span").textContent = langs[0].words[10];
+}
 </script>
