@@ -149,6 +149,7 @@ html, body {
   display: none;
   cursor: pointer;
   position: absolute;
+  height: 4em;
   top: calc(50vh - 2em);
   text-align: center;
   font-size: var(--popup-font-size);
@@ -158,7 +159,6 @@ html, body {
 #lost {
   width:10em;
   line-height: 4em;
-  height: 4em;
   left: calc(50vw - 5em);
   background-color: #f42;
   color: #ecc;
@@ -167,7 +167,6 @@ html, body {
 }
 #won {
   width:15em;
-  height: 5em;
   padding-top: 0.7em;
   box-sizing: border-box;
   line-height: 1.33em;
@@ -196,7 +195,6 @@ html, body {
   text-align: center;
 }
 #load_file {
-  /*filter:alpha(opacity: 0);*/
   opacity: 0;
   font-size: var(--banner-font-size);
   width: 3.5em;
@@ -291,7 +289,6 @@ output {
 #stats * {
   font-size: 2vmin;
 }
-
 #language {
   float: right;
   padding: 1vmin;
@@ -299,22 +296,21 @@ output {
   font-size: 2vmin;
   box-sizing: border-box;
 }
-
 </style>
 
 <!-- where blocks live -->
 <div id="board">
   <div id="banner">
-   <div id="level_label">Niveau 1</div>
-   <div id="load_label"><input type="file" id="load_file"></input><span>Ouvrir</span></div>
-   <div id="save_label"><a id="save_file" href="">Sauvegarder</a></div>
+   <div id="level_label"><span>level</span> 1</div>
+   <div id="load_label"><input type="file" id="load_file"></input><span>load</span></div>
+   <div id="save_label"><a id="save_file" href="">save</a></div>
   </div>
   <div id='toolbox'>
-   <label id="balls_label"><span>balles</span> <output id="balls_value"></output></label>
-   <label id="credits_label"><span>crédits</span> <output id="credits_value"></output></label>
-   <div id='home_button' title="Call running balls home">Envoi</div>
+   <label id="balls_label"><span>balls</span> <output id="balls_value"></output></label>
+   <label id="credits_label"><span>credits</span> <output id="credits_value"></output></label>
+   <div id='home_button' title="Call running balls home">Home</div>
    <div id='speed_box' title="Adjust animation speed">
-    <label for="speed_input"><span>Vitesse</span> <output id="speed_value"></output></label>
+    <label for="speed_input"><span>speed</span> <output id="speed_value"></output></label>
     <input type="range" id='speed_input' name="speed_input" min="10" max="100" value="40">
    </div>
   </div>
@@ -324,21 +320,21 @@ output {
 <canvas id="playground"></canvas>
 
 <!-- Game Over popup -->
-<div id="lost">Perdu !</div>
+<div id="lost">Game Over !</div>
 
 <!-- Congrats message -->
-<div id="won">Félicitations<br>Tu as complété un niveau !</div>
+<div id="won">Congratulations<br>you completed level !</div>
 
 <!-- Statistics -->
 <div id="stats">
- <div id="efficiency"><label><span>efficacité</span> : <output id="efficiency_value"></output></Label></div>
+ <div id="efficiency"><label><span>efficiency</span> : <output id="efficiency_value"></output></Label></div>
 </div>
 <div>
   <div id="language">
-      <span>Langue :</span> 
-      <select>
-          <option selected>Français</option>
-          <option onclick="set_language()">English</option>
+      <span>Lang</span> : 
+      <select id="languageSelect">
+          <option>Français</option>
+          <option selected="true">English</option>
       </select>
   </div>
 </div>
@@ -364,6 +360,7 @@ var bw = parseInt(getComputedStyle(playground).getPropertyValue('border-top-widt
   , blocksum = 0      // sum of block levels
   , isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0))
 ;
+
 
 /* ****************************************************************************
 **
@@ -1395,9 +1392,16 @@ function fire(e) {
     // compute efficiency
     if ( state == 'playing' && launched_balls ) {
       let efficiency = (original_blocksum-blocksum)/launched_balls;
-      window.efficiency_value.textContent = new Intl.NumberFormat('en-UK',
-        {minimumFractionDigits:2, maximumFractionDigits:2}
-      ).format(efficiency);
+      if ( languageSelect.value == langs[0].lang ) {
+        window.efficiency_value.textContent = new Intl.NumberFormat('fr-FR',
+          {minimumFractionDigits:2, maximumFractionDigits:2}
+        ).format(efficiency);
+      }
+      else {
+        window.efficiency_value.textContent = new Intl.NumberFormat('en-UK',
+          {minimumFractionDigits:2, maximumFractionDigits:2}
+        ).format(efficiency);
+      }
     }
 
     // while some balls still to launch ...
@@ -1495,7 +1499,7 @@ function set_nballs(n) {
 */
 function set_level(n) {
   level = n;
-  level_label.textContent = 'level '+level;
+  level_label.innerHTML = '<span>level</span> '+level;
 }
 
 /*
@@ -1709,5 +1713,58 @@ won.addEventListener('click',start_next_level);
 attachClickListener(save_file,save);
 attachClickListener(load_file,e=>e.target.disabled && e.preventDefault());
 load_file.addEventListener('change',load);
-function set_language() { head.innerHTML += '\n<meta http-equiv="refresh" content="0;URL=multiballEN.html">' }
+
+var langs = [{
+  lang:  "Français",
+  words: [
+          "Niveau",
+          "Ouvrir",
+          "Sauvegarder",
+          "Balles",
+          "Crédits",
+          "Base",
+          "Vitesse",
+          "Perdu !",
+          "Félicitations<br>Tu as complété un niveau !",
+          "Efficacité",
+          "Langue"
+         ]
+},
+{
+  lang:  "English",
+  words: [
+          "Level",
+          "Load",
+          "Save",
+          "Balls",
+          "Credits",
+          "Home",
+          "Speed",
+          "Game Over !",
+          "Congratulations<br>You completed level !",
+          "Efficiency",
+          "Lang"
+         ]
+}];
+
+languageSelect.addEventListener('change', change_language);
+change_language();
+
+function change_language() {
+  for (n=0;n<langs.length;n++) {
+    if (languageSelect.value == langs[n].lang) {
+      document.querySelector("#level_label span").textContent = langs[n].words[0];
+      document.querySelector("#load_label span").textContent = langs[n].words[1];
+      save_file.textContent = langs[n].words[2];
+      document.querySelector("#balls_label span").textContent = langs[n].words[3];
+      document.querySelector("#credits_label span").textContent = langs[n].words[4];
+      home_button.textContent = langs[n].words[5];
+      document.querySelector("label[for='speed_input'] span").textContent = langs[n].words[6];
+      lost.textContent = langs[n].words[7];
+      won.innerHTML = langs[n].words[8];
+      document.querySelector("#efficiency label span").textContent = langs[n].words[9];
+      document.querySelector("#language span").textContent = langs[n].words[10];
+    }
+  }
+}
 </script>
