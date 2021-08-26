@@ -334,8 +334,8 @@ output {
   <div id="language">
       <span>Lang</span> : 
       <select id="languageSelect">
-          <option>Français</option>
-          <option selected="true">English</option>
+          <option value="fr">Français</option>
+          <option value="en" selected>English</option>
       </select>
   </div>
 </div>
@@ -360,40 +360,55 @@ var bw = parseInt(getComputedStyle(playground).getPropertyValue('border-top-widt
   , step = 0          // current animation step id
   , blocksum = 0      // sum of block levels
   , isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0))
+  , lang_code = {fr: 'fr-FR', en: 'en-UK'}
 ;
 
-var langs = [{
-  lang:  "Français",
-  words: [
-          "Niveau",
-          "Ouvrir",
-          "Sauvegarder",
-          "Balles",
-          "Crédits",
-          "Base",
-          "Vitesse",
-          "Perdu !",
-          "Félicitations<br>Tu as complété un niveau !",
-          "Efficacité",
-          "Langue"
-         ]
-},
-{
-  lang:  "English",
-  words: [
-          "Level",
-          "Load",
-          "Save",
-          "Balls",
-          "Credits",
-          "Home",
-          "Speed",
-          "Game Over !",
-          "Congratulations<br>You completed level !",
-          "Efficiency",
-          "Lang"
-         ]
-}];
+var strings = {
+  level : {
+    fr: "Niveau",
+    en: "Level"
+  },
+  load : {
+    fr: "Ouvrir",
+    en: "Load"
+  },
+  save : {
+    fr: "Sauvegarder",
+    en: "Save"
+  },
+  balls : {
+    fr: "Balles",
+    en: "Balls"
+  },
+  credits: {
+    fr: "Crédits",
+    en: "Credits"
+  },
+  home : {
+    fr: "Base",
+    en: "Home"
+  },
+  speed: {
+    fr: "Vitesse",
+    en: "Speed"
+  },
+  gameover: {
+    fr: "Perdu !",
+    en: "Game Over !"
+  },
+  congrats: {
+    fr: "Félicitations<br>Tu as complété un niveau !",
+    en: "Congratulations<br>You completed level !"
+  },
+  efficiency: {
+    fr: "Efficacité",
+    en: "Efficiency"
+  },
+  lang: {
+    fr: "Langue",
+    en: "Lang"
+  }
+};
 
 /* ****************************************************************************
 **
@@ -1425,16 +1440,10 @@ function fire(e) {
     // compute efficiency
     if ( state == 'playing' && launched_balls ) {
       let efficiency = (original_blocksum-blocksum)/launched_balls;
-      if ( languageSelect.value == langs[0].lang ) {
-        window.efficiency_value.textContent = new Intl.NumberFormat('fr-FR',
+        window.efficiency_value.textContent = new Intl.NumberFormat(
+          lang_code[languageSelect.value],
           {minimumFractionDigits:2, maximumFractionDigits:2}
         ).format(efficiency);
-      }
-      else {
-        window.efficiency_value.textContent = new Intl.NumberFormat('en-UK',
-          {minimumFractionDigits:2, maximumFractionDigits:2}
-        ).format(efficiency);
-      }
     }
 
     // while some balls still to launch ...
@@ -1531,13 +1540,8 @@ function set_nballs(n) {
 ** set current level
 */
 function set_level(n) {
-  level = n;
-  for (x=0;x<langs.length;x++) {
-    if ( languageSelect.value == langs[x].lang ) {
-      level_label.innerHTML = '<span>' + langs[x].words[0] + '</span> ' + level;
-      break;
-    }
-  }
+  n = level;
+  level_label.innerHTML = '<span>' + strings.level[languageSelect.value] + '</span> ' + level;
 }
 
 /*
@@ -1758,21 +1762,17 @@ languageSelect.addEventListener('change', change_language);
 change_language();
 
 function change_language() {
-  for (n=0;n<langs.length;n++) {
-    if (languageSelect.value == langs[n].lang) {
-      document.querySelector("#level_label span").textContent = langs[n].words[0];
-      document.querySelector("#load_label span").textContent = langs[n].words[1];
-      save_file.textContent = langs[n].words[2];
-      document.querySelector("#balls_label span").textContent = langs[n].words[3];
-      document.querySelector("#credits_label span").textContent = langs[n].words[4];
-      home_button.textContent = langs[n].words[5];
-      document.querySelector("label[for='speed_input'] span").textContent = langs[n].words[6];
-      lost.textContent = langs[n].words[7];
-      won.innerHTML = langs[n].words[8];
-      document.querySelector("#efficiency label span").textContent = langs[n].words[9];
-      document.querySelector("#language span").textContent = langs[n].words[10];
-      break;
-    }
-  }
+  lang = languageSelect.value;
+    document.querySelector("#level_label span").textContent = strings.level[lang];
+    document.querySelector("#load_label span").textContent = strings.load[lang];
+    save_file.textContent = strings.save[lang];
+    document.querySelector("#balls_label span").textContent = strings.balls[lang];
+    document.querySelector("#credits_label span").textContent = strings.credits[lang];
+    home_button.textContent = strings.home[lang];
+    document.querySelector("label[for='speed_input'] span").textContent = strings.speed[lang];
+    lost.textContent = strings.gameover[lang];
+    won.innerHTML = strings.congrats[lang];
+    document.querySelector("#efficiency label span").textContent = strings.efficiency[lang];
+    document.querySelector("#language span").textContent = strings.lang[lang];
 }
 </script>
