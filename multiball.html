@@ -296,6 +296,7 @@ output {
   font-size: 2vmin;
   box-sizing: border-box;
 }
+
 </style>
 
 <!-- where blocks live -->
@@ -361,6 +362,38 @@ var bw = parseInt(getComputedStyle(playground).getPropertyValue('border-top-widt
   , isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0))
 ;
 
+var langs = [{
+  lang:  "Français",
+  words: [
+          "Niveau",
+          "Ouvrir",
+          "Sauvegarder",
+          "Balles",
+          "Crédits",
+          "Base",
+          "Vitesse",
+          "Perdu !",
+          "Félicitations<br>Tu as complété un niveau !",
+          "Efficacité",
+          "Langue"
+         ]
+},
+{
+  lang:  "English",
+  words: [
+          "Level",
+          "Load",
+          "Save",
+          "Balls",
+          "Credits",
+          "Home",
+          "Speed",
+          "Game Over !",
+          "Congratulations<br>You completed level !",
+          "Efficiency",
+          "Lang"
+         ]
+}];
 
 /* ****************************************************************************
 **
@@ -1499,7 +1532,12 @@ function set_nballs(n) {
 */
 function set_level(n) {
   level = n;
-  level_label.innerHTML = '<span>level</span> '+level;
+  for (x=0;x<langs.length;x++) {
+    if ( languageSelect.value == langs[x].lang ) {
+      level_label.innerHTML = '<span>' + langs[x].words[0] + '</span> ' + level;
+      break;
+    }
+  }
 }
 
 /*
@@ -1714,38 +1752,7 @@ attachClickListener(save_file,save);
 attachClickListener(load_file,e=>e.target.disabled && e.preventDefault());
 load_file.addEventListener('change',load);
 
-var langs = [{
-  lang:  "Français",
-  words: [
-          "Niveau",
-          "Ouvrir",
-          "Sauvegarder",
-          "Balles",
-          "Crédits",
-          "Base",
-          "Vitesse",
-          "Perdu !",
-          "Félicitations<br>Tu as complété un niveau !",
-          "Efficacité",
-          "Langue"
-         ]
-},
-{
-  lang:  "English",
-  words: [
-          "Level",
-          "Load",
-          "Save",
-          "Balls",
-          "Credits",
-          "Home",
-          "Speed",
-          "Game Over !",
-          "Congratulations<br>You completed level !",
-          "Efficiency",
-          "Lang"
-         ]
-}];
+
 
 languageSelect.addEventListener('change', change_language);
 change_language();
@@ -1764,6 +1771,7 @@ function change_language() {
       won.innerHTML = langs[n].words[8];
       document.querySelector("#efficiency label span").textContent = langs[n].words[9];
       document.querySelector("#language span").textContent = langs[n].words[10];
+      break;
     }
   }
 }
