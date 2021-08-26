@@ -297,12 +297,16 @@ output {
   box-sizing: border-box;
 }
 
+#language select {
+  height: 3.25vmin;
+  width: 10.7vmin;
+}
 </style>
 
 <!-- where blocks live -->
 <div id="board">
   <div id="banner">
-   <div id="level_label"><span>level</span> 1</div>
+   <div id="level_label"><span>level</span> <output id="level_output">1</output></div>
    <div id="load_label"><input type="file" id="load_file"></input><span>load</span></div>
    <div id="save_label"><a id="save_file" href="">save</a></div>
   </div>
@@ -1541,7 +1545,7 @@ function set_nballs(n) {
 */
 function set_level(n) {
   n = level;
-  level_label.innerHTML = '<span>' + strings.level[languageSelect.value] + '</span> ' + level;
+  level_output.innerHTML = level;
 }
 
 /*
