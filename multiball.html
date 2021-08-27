@@ -1782,4 +1782,18 @@ function change_language() {
     document.querySelector("#language span").textContent = strings.lang[lang];
     won.style.height = congrats_size[lang];
 }
+
+document.addEventListener('keyup', e => {
+  if( e.key == 'e' ) {
+    languageSelect.value = 'en';
+    change_language();
+  }
+  else if( e.key == 'f' ) {
+    languageSelect.value = 'fr';
+    change_language();
+  }
+  else {
+    console.log('Key "'+e.key+'" not saved')
+  }
+});
 </script>
