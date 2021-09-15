@@ -179,6 +179,7 @@ html, body {
 }
 #banner {
   width: 100%;
+  position: absolute;
 }
 #level_label {
   position: absolute;
@@ -337,7 +338,7 @@ output {
 </div>
 <div>
   <div id="language">
-      <span>Lang</span> : 
+    <span>Lang</span> : 
       <select id="languageSelect">
           <option value="fr">Français</option>
           <option value="en" selected>English</option>
@@ -367,6 +368,7 @@ var bw = parseInt(getComputedStyle(playground).getPropertyValue('border-top-widt
   , isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0))
   , lang_code = {fr: 'fr-FR', en: 'en-UK'}
   , congrats_size = {fr: '5.33em', en: '4em'}
+  , banner_dispo = {fr: '-10px', en: '0px'}
 ;
 
 var strings = {
@@ -1781,6 +1783,7 @@ function change_language() {
     document.querySelector("#efficiency label span").textContent = strings.efficiency[lang];
     document.querySelector("#language span").textContent = strings.lang[lang];
     won.style.height = congrats_size[lang];
+    banner.style.marginLeft = banner_dispo[lang];
 }
 
 document.addEventListener('keyup', e => {
